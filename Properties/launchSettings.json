@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Privgram": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "phone_number": "+41789051810"
+      }
+    }
+  }
+}

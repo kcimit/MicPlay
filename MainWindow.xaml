@@ -1,0 +1,102 @@
+﻿<Window x:Class="MicPlay.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:local="clr-namespace:MicPlay"
+        mc:Ignorable="d"
+        Title="MicPlay" Height="Auto" Width="1200"
+        Icon=".\\app.ico"
+        Closing="OnClose" >
+    <!--StateChanged="OnStateChanged"-->
+    <!--VisibleChanged="OnIsVisibleChanged"-->
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="bool2vis"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40px"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40px"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Border Grid.Row="1" Grid.Column="0" BorderBrush="Black" BorderThickness="2">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" FontWeight="Bold" Margin="5" Text="Device"/>
+
+                <ComboBox Grid.Row="2" Grid.Column="0" ItemsSource="{Binding Path=DeviceEntries}" Margin="5"
+                  DisplayMemberPath="Name" SelectedValue="{Binding Path=Device}" />
+                
+                <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
+                    <Button Content=" Add files " HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Command="{Binding AddFilesCommand}"/>
+                    <Button Content=" Clear files " HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Command="{Binding ClearFilesCommand}"/>
+                    <Button Content=" Clear status " HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Command="{Binding ClearStatusCommand}"/>
+                </StackPanel>
+                
+                <Border Grid.Row="4" Grid.ColumnSpan="3"  BorderBrush="#FFDADFE1" Background="#FFECF0F1" BorderThickness="1" >
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" >
+                            <TextBox HorizontalAlignment="Stretch" Margin="5" Text="{Binding Status}" TextWrapping="Wrap"/>
+                        </ScrollViewer>
+                    </Border>
+            </Grid>
+        </Border>
+        <ListView local:App.EnableGridViewSort="True" Grid.Row="1" Grid.Column="1" Margin="5" ItemsSource="{Binding SentList}" SelectedItem="{Binding CurrentItem}" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Play">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="6,2,6,2">
+                                    <Button  Command="{Binding DataContext.PlayCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}">
+                                        <Path Data="M8.5,8.64L13.77,12L8.5,15.36V8.64M6.5,5V19L17.5,12" Stretch="Uniform">
+                                            <Path.Style>
+                                                <Style TargetType="Path">
+                                                    <Setter Property="Fill" Value="Gray" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsInThrash}" Value="True">
+                                                            <Setter Property="Fill" Value="Black" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Path.Style>
+                                        </Path>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="File" DisplayMemberBinding="{Binding FileName}" />
+                    <GridViewColumn Header="Played On" DisplayMemberBinding="{Binding PlayedOn, StringFormat=\{0:yyyy.MM.dd HH:mm:ss\}}" Width="150" />
+                    <GridViewColumn Header="Played">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding PlayedAlready}"/>
+                                    </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Orientation="Horizontal"  Grid.Row="2" Grid.Column="1" Visibility="{Binding Path=ControlsEnabled,Converter={StaticResource bool2vis}}">
+            <Button  Content=" Minimize to tray " HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Command="{Binding MinimizeToTrayCommand}"/>
+            <Label Margin="5" Content="{Binding Status2}"/>
+        </StackPanel>
+        
+
+
+    </Grid>
+</Window>
